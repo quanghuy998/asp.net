@@ -1,0 +1,144 @@
+{
+  "format": 1,
+  "restore": {
+    "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.DAL\\QuanLyDaoTao.DAL.csproj": {}
+  },
+  "projects": {
+    "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.DAL\\QuanLyDaoTao.DAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.DAL\\QuanLyDaoTao.DAL.csproj",
+        "projectName": "QuanLyDaoTao.DAL",
+        "projectPath": "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.DAL\\QuanLyDaoTao.DAL.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.DAL\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.Domain\\QuanLyDaoTao.Domain.csproj": {
+                "projectPath": "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.Domain\\QuanLyDaoTao.Domain.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.Domain\\QuanLyDaoTao.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.Domain\\QuanLyDaoTao.Domain.csproj",
+        "projectName": "QuanLyDaoTao.Domain",
+        "projectPath": "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.Domain\\QuanLyDaoTao.Domain.csproj",
+        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+        "outputPath": "F:\\QuanLyDaoTao.Final\\QuanLyDaoTao.API\\QuanLyDaoTao.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[5.0.12, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.12, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.404\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

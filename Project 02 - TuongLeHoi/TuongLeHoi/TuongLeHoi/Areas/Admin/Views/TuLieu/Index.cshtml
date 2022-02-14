@@ -1,0 +1,289 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="section--title">
+    <h3>DANH SÁCH TƯ LIỆU</h3>
+</div>
+<div class="box-bordertop">
+    <div class="row justify-content-end">
+        <a class="p-2 bg-success text-white" id="btnCreate">
+            <i class="fa fa-plus"></i>
+            <span>Thêm mới</span>
+        </a>
+    </div>
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th class="text-center">Tên tư liệu</th>
+                <th class="text-center">Ngày tạo</th>
+                <th class="text-center">Ngày cập nhật cuối</th>
+                <th class="text-center">Người tạo</th>
+                <th class="text-center">Người cập nhật cuối</th>
+                <th class="text-center">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content container">
+            <form enctype="multipart/form-data" id="form" method="post">
+                <h2 class="text-center m-2">TƯ LIỆU</h2>
+                <input id="hiddenvalue" hidden type="text" value="" />
+                <div class="errorTxt" id="errorTxt"></div>
+                <div class="form-group">
+                    <label class="control-label">Loại tư liệu</label>
+                    <select class="form-control" id="maLoaiTuLieu" name="maLoaiTuLieu">
+                        <option class="form-control"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Tên tư liệu</label>
+                    <input class="form-control" id="tenTuLieu" name="tenTuLieu" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Hình ảnh</label>
+                    <input class="form-control" id="hinhAnh" name="hinhAnh" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Người tạo</label>
+                    <input class="form-control" id="nguoiTao" name="nguoiTao" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Người cập nhật cuối</label>
+                    <input class="form-control" id="nguoiCapNhatCuoi" name="nguoiCapNhatCuoi" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Mô tả</label>
+                    <textarea class="form-control" rows="3" id="moTa" name="moTa"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" id="btnSubmit">Lưu lại</button>
+                    <button type="button" class="btn btn-danger" id="btnClose" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="notification">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thông báo</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="notiMessenger"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnConfirm">Xác nhận</button>
+                <button type="button" class="btn btn-danger" id="btnClose" data-dismiss="modal">Đóng lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            LoadDataList();
+            LoaiTuLieuData();
+        });
+        function LoadDataList() {
+            $.ajax({
+                url: '/Admin/TuLieu/DanhSach',
+                type: 'GET',
+                success: function (data) {
+                    if (data.code == 200) {
+                        let stt = 0;
+                        $.each(data.danhsach, function (key, value) {
+
+                            //Convert Datetime to String
+                            let ngayTao = new Date(value.ngayTao);
+                            let dd1 = String(ngayTao.getDate()).padStart(2, '0');
+                            let mm1 = String(ngayTao.getMonth() + 1).padStart(2, '0'); //January is 0!
+                            let yyyy1 = ngayTao.getFullYear();
+                            ngayTao = dd1 + '/' + mm1 + '/' + yyyy1;
+
+                            let ngayCapNhatCuoi = new Date(value.ngayCapNhatCuoi);
+                            let dd2 = String(ngayCapNhatCuoi.getDate()).padStart(2, '0');
+                            let mm2 = String(ngayCapNhatCuoi.getMonth() + 1).padStart(2, '0'); //January is 0!
+                            let yyyy2 = ngayCapNhatCuoi.getFullYear();
+                            ngayCapNhatCuoi = dd2 + '/' + mm2 + '/' + yyyy2;
+
+                            stt = stt + 1;
+                            let tr = '<tr id="' + value.id + '">';
+                            tr += '<td class="text-center">' + stt + '</td>';
+                            tr += '<td>' + value.tenTuLieu + '</td>';
+                            tr += '<td class="text-center">' + ngayTao + '</td>';
+                            tr += '<td class="text-center">' + ngayCapNhatCuoi + '</td>';
+                            tr += '<td>' + value.nguoiTao + '</td>';
+                            tr += '<td>' + value.nguoiCapNhatCuoi + '</td>';
+                            tr += '<td class="text-center">'
+                            tr += '<a id="btnEdit"><i class="fa fa-edit text-primary mr-2"></i></a>';
+                            tr += '<a id="btnDelete"><i class="fa fa-trash text-danger"></i></a>';
+                            tr += '</td>'
+                            tr += '</tr>'
+                            $('#table-body').append(tr);
+                        });
+                    }
+                }
+            });
+        };
+        function ThongBao(messenger) {
+            $("#notiMessenger").empty();
+            $("#notiMessenger").append(messenger);
+            $("#btnConfirm").hide();
+            $("#notification").modal();
+        };
+        function ResetForm() {
+            $("#maLoaiTuLieu").val('');
+            $("#tenTuLieu").val('');
+            $("#hinhAnh").val('');
+            $("#nguoiTao").val('');
+            $("#nguoiCapNhatCuoi").val('');
+            $("#moTa").val('');
+        };
+        function LoaiTuLieuData() {
+            $.ajax({
+                url: '/Admin/LoaiTuLieu/DanhSach',
+                type: 'GET',
+                success: function (data) {
+                    if (data.code === 200) {
+                        $.each(data.danhsach, function (key, value) {
+                            let option = '<option  value="' + value.id + '" class="form-control">' + value.tenLoaiTuLieu + '</option>';
+                            $('#maLoaiTuLieu').append(option);
+                        });
+                    }
+                }
+            })
+        };
+
+        $('#btnSubmit').click(function () {
+            let hiddenvalue = $('#hiddenvalue').val();
+
+            let maLoaiTuLieu = $('#maLoaiTuLieu').val().trim();
+            let tenTuLieu = $('#tenTuLieu').val().trim();
+            let hinhAnh = $('#hinhAnh').val().trim();
+            let nguoiTao = $('#nguoiTao').val().trim();
+            let nguoiCapNhatCuoi = $('#nguoiCapNhatCuoi').val().trim();
+            let moTa = $('#moTa').val().trim();
+
+            let formData1 = new FormData();
+            formData1.append('maLoaiTuLieu', maLoaiTuLieu);
+            formData1.append('tenTuLieu', tenTuLieu);
+            formData1.append('hinhAnh', hinhAnh);
+            formData1.append('nguoiTao', nguoiTao);
+            formData1.append('nguoiCapNhatCuoi', nguoiCapNhatCuoi);
+            formData1.append('moTa', moTa);
+
+            let formData2 = new FormData();
+            formData2 = formData1;
+            formData2.append('id', hiddenvalue);
+
+            if ($("#form").valid()) {
+                if (hiddenvalue.length == 0) {
+                    //Thêm mới
+                    $.ajax({
+                        url: '/Admin/TuLieu/TaoMoi',
+                        type: 'post',
+                        data: formData1,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.code == 200) {
+                                ResetForm();
+                                $('#table-body').empty();
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                                LoadDataList();
+                            } else {
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                            }
+                        }
+                    });
+                }
+                else if (hiddenvalue.length != 0) {
+                    //Chỉnh sửa
+                    $.ajax({
+                        url: '/Admin/TuLieu/ChinhSua',
+                        type: 'PUT',
+                        data: formData2,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.code == 200) {
+                                $('#table-body').empty();
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                                LoadDataList();
+                            } else {
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                            }
+                        }
+                    })
+                }
+            }
+
+
+        });
+        $(document).on('click', "a[id='btnCreate']", function () {
+            $('#hiddenvalue').val(''); // Hidden id
+            $("#modal").modal();
+            ResetForm();
+        });
+        $(document).on('click', "a[id='btnEdit']", function () {
+            let id = $(this).closest('tr').attr('id');
+            $('#hiddenvalue').val(id);
+            ResetForm();
+
+            $.ajax({
+                url: '/Admin/TuLieu/LayID',
+                type: 'GET',
+                data: { id: id },
+                success: function (data) {
+                    $('#maLoaiTuLieu').val(data.data.maLoaiTuLieu);
+                    $('#tenTuLieu').val(data.data.tenTuLieu);
+                    $('#hinhAnh').val(data.data.hinhAnh);
+                    $('#nguoiTao').val(data.data.nguoiTao);
+                    $('#nguoiCapNhatCuoi').val(data.data.nguoiCapNhatCuoi);
+                    $('#moTa').val(data.data.moTa);
+                    $("#modal").modal();
+                }
+            });
+        });
+        $(document).on('click', "a[id='btnDelete']", function () {
+            let id = $(this).closest('tr').attr('id');
+            var noti = confirm("Bạn có muốn xóa không?");
+            if (noti == true) {
+                $.ajax({
+                    url: '/Admin/TuLieu/XoaBo',
+                    type: 'delete',
+                    data: { id: id },
+                    success: function (data) {
+                        if (data.code === 200) {
+                            $('#table-body').empty();
+                            LoadDataList();
+                            ThongBao(data.msg);
+                        }
+                        else ThongBao(data.msg);
+                    }
+                })
+            } else {
+                alert("You pressed Cancel!");
+            }
+        });
+    </script>
+}
+
+
+
+

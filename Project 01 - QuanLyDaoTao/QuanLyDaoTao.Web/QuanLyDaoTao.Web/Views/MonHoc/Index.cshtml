@@ -1,0 +1,187 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Môn học";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="toolbar">
+    <div class="container">
+        <h2>Môn học</h2>
+        <hr />
+        <form>
+            <div class="row">
+                <div class="col">
+                    <label>Mã môn</label>
+                    <select class="form-control" id="search-id">
+                        <option value=null>- Tất cả - </option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Mã chương trình</label>
+                    <select class="form-control" id="search-idCT">
+                        <option value=null>- Tất cả - </option>
+                    </select>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-end" style="padding: 15px">
+                <a class="btn btn-danger" id="btnSearch">Tìm kiếm</a>
+                <a class="btn btn-success" id="btnCreate">
+                    <i class="fa fa-plus"></i>
+                    <span>Tạo mới</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="table--database">
+    <div class="container">
+        <div class="section--title">
+            <h3>DANH SÁCH MÔN HỌC</h3>
+        </div>
+        <div class="box-bordertop">
+            <table class="table table-hover table-bordered" id="">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã CT</th>
+                        <th>Tên CT</th>
+                        <th>Mã môn học</th>
+                        <th>Tên môn học</th>
+                        <th>Số giờ</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalLopHoc">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content container">
+            <form enctype="multipart/form-data" id="formLopHoc" method="post">
+                <h2 class="text-center m-2">LỚP HỌC</h2>
+                <input id="hiddenvalue" hidden type="text" value="" />
+                <div class="errorTxt" id="errorTxt"></div>
+                <div class="form-group">
+                    <label>Mã lớp</label>
+                    <input class="form-control" id="maLop" name="maLop" />
+                </div>
+                <div class="form-group">
+                    <label>ID chương trình</label>
+                    <select class="form-control" id="ctDaoTaoID" name="ctDaoTaoID">
+                        <option class="form-control"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ngày khai giảng</label>
+                    <input class="form-control" id="ngayKhaiGiang" name="ngayKhaiGiang" placeholder="DD-MM-YYYY" />
+                    <button class="btn btn-primary" id="checkdate1">CHECK DATE</button>
+                </div>
+                <div class="form-group">
+                    <label>Ngày kết thúc</label>
+                    <input class="form-control" id="ngayKetThuc" name="ngayKetThuc" placeholder="DD-MM-YYYY" />
+                    <button class="btn btn-primary" id="checkdate2">CHECK DATE</button>
+                </div>
+                <div class="form-group">
+                    <label>Số lượng học viên</label>
+                    <input class="form-control" id="soLuongHV" name="soLuongHV" />
+                </div>
+                <div class="form-group">
+                    <label>Quyết định mở lớp</label>
+                    <div class="file-info" id="file-info-1">
+                        <div class="file-icon"><i class="fa fa-file-word fa-2x"></i></div>
+                        <div class="file-content">
+                            <a class="file-name" id="file-name-1"></a>
+                        </div>
+                    </div>
+                    <div class="custom-file" id="custom-file-1">
+                        <label for="fileUpload1">Đính kèm</label>
+                        <input type="file" id="fileUpload1" name="fileUpload1" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Thời khóa biểu</label>
+                    <div class="file-info" id="file-info-2">
+                        <div class="file-icon"><i class="fa fa-file-word fa-2x"></i></div>
+                        <div class="file-content">
+                            <a class="file-name" id="file-name-2"></a>
+                        </div>
+                    </div>
+                    <div class="custom-file" id="custom-file-2">
+                        <label for="fileUpload2">Đính kèm</label>
+                        <input type="file" id="fileUpload2" name="fileUpload2" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <textarea class="form-control" id="ghiChu" name="ghiChu" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" id="btnSubmit">Lưu lại</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="notification">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thông báo</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="notiMessenger"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnConfirm">Xác nhận</button>
+                <button type="button" class="btn btn-danger" id="btnClose" data-dismiss="modal">Đóng lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        LoadClassList();
+    })
+
+    function LoadClassList() {
+        $.ajax({
+            url: '/MonHoc/DanhSach',
+            type: 'GET',
+            data: {
+                id: null,
+                ctDaoTaoID: null,
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    let stt = 0;
+                    $.each(data.monhoc, function (key, value) {
+                        stt = stt + 1;
+                        let tr = '<tr id="' + value.id + '">';
+                        tr += '<td>' + stt + '</td>';
+                        tr += '<td>' + value.maCT + '</td>';
+                        tr += '<td>' + value.tenCT + '</td>';
+                        tr += '<td>' + value.maMonHoc + '</td>';
+                        tr += '<td>' + value.tenMonHoc + '</td>';
+                        tr += '<td>' + value.soGio + '</td>';
+                        tr += '<td>'
+                        tr += '<button class="btn btn-sm btn-info" id="btnEdit" name="edit"><i class="fa fa-info-circle"></i></button>';
+                        tr += '<button class="btn btn-sm btn-danger" id="btnDelete" name="delete"><i class="fa fa-trash"></i></button>';
+                        tr += '</td>'
+                        tr += '</tr>'
+                        $('#table-body').append(tr);
+                    });
+                }
+            }
+        });
+    }
+</script>
+}

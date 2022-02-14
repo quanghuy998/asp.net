@@ -1,0 +1,507 @@
+﻿@model QuanLyDaoTao.Web.Models.ChuongTrinhDaoTao.TaoMoi
+@{
+    ViewData["Title"] = "Chương trình đào tạo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="toolbar">
+    <div class="container">
+        <h2>Chương trình đào tạo</h2>
+        <hr />
+        <form>
+            <div class="row">
+                <div class="col">
+                    <label>Tên chương trình đào tạo</label>
+                    <select class="form-control" id="select-searchbymaCT">
+                        <option class="form-control" value="">- Tất cả -</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Trạng thái</label>
+                    <select class="form-control" id="select-searchbytrangthai">
+                        <option value="2">- Tất cả -</option>
+                        <option value="0">Đang hoạt động</option>
+                        <option value="1">Tạm dừng</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-between" style="padding: 15px">
+                <a class="btn btn-success" id="btnCreate">
+                    <i class="fa fa-plus"></i>
+                    <span>Tạo mới</span>
+                </a>
+                <a class="btn btn-danger" id="btnSearch">
+                    <i class="fa fa-search"></i>
+                    <span>Tìm kiếm</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="table--database">
+    <div class="container">
+        <div class="section--title">
+            <h3>DANH SÁCH CHƯƠNG TRÌNH ĐÀO TẠO</h3>
+        </div>
+        <div class="box-bordertop">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width:5%">STT</th>
+                        <th style="width:8%">Mã CT</th>
+                        <th style="width:15%">Tên chương trình</th>
+                        <th style="width:10%">Học phí</th>
+                        <th style="width:13%">Ngày ban hành</th>
+                        <th style="width:10%">Nội dung</th>
+                        <th style="width:10%">Quyết định</th>
+                        <th style="width:9%">Ghi chú</th>
+                        <th style="width:10%">Trạng thái</th>
+                        <th style="width:10%">Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalCTDT">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content container">
+            <form enctype="multipart/form-data" id="formCTDT" method="post">
+                <h2 class="text-center m-2">CHƯƠNG TRÌNH ĐÀO TẠO</h2>
+                <input type="text" hidden id="hiddenvalue" value="" /> <!--Phân biệt nút Lưu lại trong Tạo mới và Chỉnh sửa-->
+                <div class="errorTxt form-group" id="errorTxt"></div> <!--Khu vực validate-->
+                <div class="form-group">
+                    <label class="control-label">Mã chương trình</label>
+                    <input id="maCT" name="maCT" class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Tên chương trình</label>
+                    <input id="tenCT" name="tenCT" class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Học phí</label>
+                    <input id="hocPhi" name="hocPhi" class="form-control" type="text" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Ngày ban hành</label>
+                    <input id="ngayBanHanh" name="ngayBanHanh" class="form-control" type="datetime" placeholder="DD/MM/YYYY" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Nội dung chương trình</label>
+                    <div class="file-info" id="file-info-1">
+                        <div class="file-icon"><i class="fa fa-file-word fa-2x"></i></div>
+                        <div class="file-content">
+                            <a class="file-name" id="file-name-1"></a>
+                        </div>
+                    </div>
+                    <div class="custom-file" id="custom-file-1">
+                        <label for="fileUpload1">Đính kèm</label>
+                        <input type="file" id="fileUpload1" name="fileUpload1" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Quyết định ban hành</label>
+                    <div class="file-info" id="file-info-2">
+                        <div class="file-icon"><i class="fa fa-file-word fa-2x"></i></div>
+                        <div class="file-content">
+                            <a class="file-name" id="file-name-2"></a>
+                        </div>
+                    </div>
+                    <div class="custom-file" id="custom-file-2">
+                        <label for="fileUpload2">Đính kèm</label>
+                        <input type="file" id="fileUpload2" name="fileUpload2" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Ghi chú</label>
+                    <textarea id="ghiChu" name="ghiChu" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <div id="trangThai" name="trangThai">
+                        <label>Trạng thái: </label>
+                        <input type="radio" id="trangThai" name="trangThai" value="1" />Tạm dừng
+                        <input type="radio" id="trangThai" name="trangThai" value="0" />Đang hoạt động
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" id="btnSubmit">Lưu lại</button>
+                    <button type="button" class="btn btn-primary" id="btncheck">Check Date</button>
+                    <button type="button" class="btn btn-secondary" id="btnClose" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="notification">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thông báo</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="notiMessenger"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnConfirm">Xác nhận</button>
+                <button type="button" class="btn btn-danger" id="btnClose" data-dismiss="modal">Đóng lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            LoadProgramList();
+            ValidateForm();
+            //$('#ngayBanHanh').datepicker();
+            $('#ngayBanHanh').datepicker({ dateFormat: "dd/mm/yy" });
+        });
+
+        function LoadProgramList() {
+            $.ajax({
+                url: 'ChuongTrinhDaoTao/DanhSach',
+                type: 'GET',
+                data: {
+                    id: 0,
+                    trangThai: 2
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        $.each(data.ctdt, function (key, value) {
+
+                            //Convert Datetime to String
+                            let today = new Date(value.ngayBanHanh);
+                            let dd = String(today.getDate()).padStart(2, '0');
+                            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                            let yyyy = today.getFullYear();
+                            today = dd + '/' + mm + '/' + yyyy;
+
+                            let tr = '<tr id="' + value.id + '">';
+                            tr += '<td>' + value.stt + '</td>';
+                            tr += '<td>' + value.maCT + '</td>';
+                            tr += '<td >' + value.tenCT + '</td>';
+                            tr += '<td>' + value.hocPhi + '</td>';
+                            tr += '<td>' + today + '</td>';
+                            tr += '<td>' + value.noiDungCT + '</td>';
+                            tr += '<td>' + value.qdBanHanh + '</td>';
+                            tr += '<td>' + value.ghiChu + '</td>';
+                            tr += '<td>' + value.trangThai + '</td>';
+                            tr += '<td>'
+                            tr += '<button class="btn btn-sm" name="edit" style="color:green"><i class="fa fa-info-circle"></i></button>';
+                            tr += '<button class="btn btn-sm" name="delete" style="color:red"><i class="fa fa-trash"></i></button>';
+                            tr += '</td'
+                            tr += '</tr>'
+                            $('#table-body').append(tr);
+                        });
+
+                        $.each(data.ctdt, function (key, value) {
+                            let option = '<option  value="' + value.maCT + '" class="form-control">' + value.tenCT + '</option>';
+                            $('#select-searchbymaCT').append(option);
+                        });
+                    }
+                }
+            });
+        };
+        function ResetForm() {
+            $("#maCT").val('');
+            $("#tenCT").val('');
+            $("#hocPhi").val('');
+            $("#ngayBanHanh").val('');
+            $("#fileUpload1").val('');
+            $("#fileUpload2").val('');
+            $("#ghiChu").val('');
+            $('#errorTxt').empty();
+            $('#file-name-1').text('');
+            $('#file-name-2').text('');
+            $('#file-name-1').attr('href', " ");
+            $('#file-name-2').attr('href', " ");
+
+        };
+        function ThongBao(messenger) {
+            $("#notiMessenger").empty();
+            $("#notiMessenger").append(messenger);
+            $("#btnConfirm").hide();
+            $("#notification").modal();
+        };
+        function ValidateForm() {
+            $("form[id='formCTDT']").validate({
+                rules: {
+                    maCT: {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 50
+                    },
+                    tenCT: {
+                        required: true,
+                        minlength: 1,
+                        maxlength: 256
+                    },
+                    hocPhi: {
+                        required: true,
+                        digits: true
+                    },
+                    ngayBanHanh: "required",
+                    ghiChu: {
+                        maxlength: 1024
+                    }
+                },
+                messages: {
+                    maCT: {
+                        required: "Vui lòng nhập Mã chương trình",
+                        minlength: "Chiều dài phải lớn hơn 1 ký tự",
+                        maxlength: "Chiều dài không vượt quá 50 kí tự"
+                    },
+                    tenCT: {
+                        required: "Vui lòng nhập Tên chương trình",
+                        minlength: "Chiều dài phải lớn hơn 1 ký tự",
+                        maxlength: "Chiều dài không vượt quá 256 ký tự"
+                    },
+                    hocPhi: {
+                        required: "Vui lòng nhập Học phí",
+                        digits: "Vui lòng nhập số lớn hơn 0"
+                    },
+                    ngayBanHanh: "Vui lòng nhập Ngày ban hành",
+                    ghiChu: {
+                        maxlength: "Chiều dài không vượt quá 1024 ký tự"
+                    },
+                },
+                errorElement: 'div',
+                errorLabelContainer: '.errorTxt',
+                submitHandler: function (form) {
+                }
+            });
+        }
+
+        $('#btnCreate').click(function () {
+            ResetForm();
+            $('#trangThai').hide();
+            $('#file-info-1').hide();
+            $('#file-info-2').hide();
+            $('#hiddenvalue').val(''); // Hidden id
+            $('#modalCTDT').modal();
+        });
+        $('#btnSearch').click(function () {
+            let select1 = document.getElementById('select-searchbymaCT');
+            let option1 = select1.options[select1.selectedIndex];
+            let maCT = option1.value;
+            let select2 = document.getElementById('select-searchbytrangthai');
+            let option2 = select2.options[select2.selectedIndex];
+            let trangThai = option2.value;
+            $.ajax({
+                url: 'ChuongTrinhDaoTao/DanhSach',
+                type: 'GET',
+                data: {
+                    maCT: maCT,
+                    trangThai: trangThai
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        $('#table-body').empty();
+                        $.each(data.ctdt, function (key, value) {
+                            //Convert Datetime to String
+                            let today = new Date(value.ngayBanHanh);
+                            let dd = String(today.getDate()).padStart(2, '0');
+                            let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                            let yyyy = today.getFullYear();
+                            today = dd + '/' + mm + '/' + yyyy;
+
+                            let tr = '<tr id="' + value.id + '">';
+                            tr += '<td>' + value.stt + '</td>';
+                            tr += '<td>' + value.maCT + '</td>';
+                            tr += '<td >' + value.tenCT + '</td>';
+                            tr += '<td>' + value.hocPhi + '</td>';
+                            tr += '<td>' + today + '</td>';
+                            tr += '<td>' + value.noiDungCT + '</td>';
+                            tr += '<td>' + value.qdBanHanh + '</td>';
+                            tr += '<td>' + value.ghiChu + '</td>';
+                            tr += '<td>' + value.trangThai + '</td>';
+                            tr += '<td>'
+                            tr += '<button class="btn btn-sm" name="edit" style="color:green"><i class="fa fa-info-circle"></i></button>';
+                            tr += '<button class="btn btn-sm" name="delete" style="color:red"><i class="fa fa-trash"></i></button>';
+                            tr += '</td'
+                            tr += '</tr>'
+                            $('#table-body').append(tr);
+                        });
+                    }
+                }
+            });
+        });
+        $('#btnSubmit').click(function () {
+            let hiddenvalue = $('#hiddenvalue').val();
+
+            let getdate = $('#ngayBanHanh').val().trim();
+            let dd = getdate.slice(0, 2);
+            let mm = getdate.slice(3, 5);
+            let yyyy = getdate.slice(6, 10);
+            ngayBanHanh = mm + '-' + dd + '-' + yyyy;
+
+            let maCT = $('#maCT').val().trim();
+            let tenCT = $('#tenCT').val().trim();
+            let hocPhi = $('#hocPhi').val().trim();
+            let fileUpload1 = $('#fileUpload1')[0].files[0];
+            let fileUpload2 = $('#fileUpload2')[0].files[0];
+            let ghiChu = $('#ghiChu').val().trim();
+            let trangThai = $('input[id="trangThai"]:checked').val();
+
+            let formData1 = new FormData();
+            formData1.append('maCT', maCT);
+            formData1.append('tenCT', tenCT);
+            formData1.append('hocPhi', hocPhi);
+            formData1.append('ngayBanHanh', ngayBanHanh);
+            formData1.append('fileNoiDungCT', fileUpload1);
+            formData1.append('fileQDBanHanh', fileUpload2);
+            formData1.append('ghiChu', ghiChu);
+
+            let formData2 = new FormData();
+            formData2 = formData1;
+            formData2.append('id', hiddenvalue);
+            formData2.append('trangThai', trangThai);
+            formData2.append('noiDungCT', $("#file-name-1").text());
+            formData2.append('qdBanHanh', $("#file-name-2").text());
+
+            if ($("#formCTDT").valid()) {
+                if (hiddenvalue.length == 0) {
+                    //Thêm mới
+
+                    $.ajax({
+                        url: '/ChuongTrinhDaoTao/TaoMoi',
+                        type: 'post',
+                        data: formData1,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.code == 200) {
+                                console.log(formData1);
+                                ResetForm();
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                                $('#table-body').empty();
+                                LoadProgramList();
+                            } else {
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                            }
+                        }
+                    });
+                }
+                else if (hiddenvalue.length != 0) {
+                    //Chỉnh sửa
+                    //alert(ngayBanHanh);
+                    $.ajax({
+                        url: '/ChuongTrinhDaoTao/ChinhSua',
+                        type: 'PUT',
+                        data: formData2,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.code == 200) {
+                                $('#table-body').empty();
+                                LoadProgramList();
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                            } else {
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                            }
+                        }
+                    })
+                }
+            }
+ 
+   
+        });
+
+        $(document).on('click', "button[name='edit']", function () {
+            ResetForm();
+            $('#file-info-1').show();
+            $('#file-info-2').show();
+            $('#trangThai').show();
+            let id = $(this).closest('tr').attr('id');
+            $('#hiddenvalue').val(id);
+
+            $.ajax({
+                url: '/ChuongTrinhDaoTao/LayTheoID',
+                type: 'GET',
+                data: { id: id },
+                success: function (data) {
+                    let today = new Date(data.ctdt.ngayBanHanh);
+                    let dd = String(today.getDate()).padStart(2, '0');
+                    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    let yyyy = today.getFullYear();
+                    today = dd + '/' + mm + '/' + yyyy;
+
+                    let $radios = $('input:radio[name=trangThai]');
+                    $('#maCT').val(data.ctdt.maCT);
+                    $('#tenCT').val(data.ctdt.tenCT);
+                    $('#hocPhi').val(data.ctdt.hocPhi);
+                    $('#ngayBanHanh').val(today);
+                    $('#trangThai').val(data.ctdt.trangThai);
+                    $('#ghiChu').val(data.ctdt.ghiChu);
+                    $('#file-name-1').text(data.ctdt.noiDungCT);
+                    $('#file-name-2').text(data.ctdt.qdBanHanh);
+                    if (data.ctdt.trangThai === 0) {
+                        $radios.filter('[value=0]').prop('checked', true);
+                    }
+                    else if (data.ctdt.trangThai === 1) {
+                        $radios.filter('[value=1]').prop('checked', true);
+                    }
+                    $('#modalCTDT').modal();
+                }
+            });
+            $.ajax({
+                url: '/FileUpload/LayTheoDoiTuongID',
+                type: 'get',
+                data: { doiTuongID: id },
+                success: function (data) {
+                    for (let i = 0; i < data.files.length; i++) {
+                        if (data.files[i].sttTep === 1) {
+                            $('#file-name-1').attr('href', data.files[i].noiLuuTru);
+                        }
+                        if (data.files[i].sttTep === 2) {
+                            $('#file-name-2').attr('href', data.files[i].noiLuuTru);
+                        }
+                    }
+                }
+            });
+        });
+        $(document).on('click', "button[name='delete']", function () {
+            let id = $(this).closest('tr').attr('id');
+            var noti = confirm("Bạn có muốn xóa không?");
+            if (noti == true) {
+                $.ajax({
+                    url: 'ChuongTrinhDaoTao/XoaBo',
+                    type: 'DELETE',
+                    data: { id: id },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            $('#table-body').empty();
+                            LoadProgramList();
+                            ThongBao(data.msg);
+                        }
+                        else ThongBao(data.msg);
+                    }
+                })
+            } else {
+                alert("You pressed Cancel!");
+            }
+        });
+
+        $("#fileUpload1").change(function () {
+            let inputfile = document.getElementById("fileUpload1").files;
+            let file = inputfile[0];
+            $('#file-info-1').show();
+            $('#file-name-1').text(file.name);
+        });
+        $("#fileUpload2").change(function () {
+            let inputfile = document.getElementById("fileUpload2").files;
+            let file = inputfile[0];
+            $('#file-info-2').show();
+            $('#file-name-2').text(file.name);
+        });
+    </script>
+}

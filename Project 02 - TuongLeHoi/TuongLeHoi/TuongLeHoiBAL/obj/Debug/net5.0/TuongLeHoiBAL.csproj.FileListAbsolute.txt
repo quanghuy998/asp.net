@@ -1,0 +1,15 @@
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\TuongLeHoiBAL.csproj.AssemblyReference.cache
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\TuongLeHoiBAL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\TuongLeHoiBAL.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\TuongLeHoiBAL.AssemblyInfo.cs
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\TuongLeHoiBAL.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\bin\Debug\net5.0\TuongLeHoiBAL.deps.json
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\bin\Debug\net5.0\TuongLeHoiBAL.dll
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\bin\Debug\net5.0\ref\TuongLeHoiBAL.dll
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\bin\Debug\net5.0\TuongLeHoiBAL.pdb
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\bin\Debug\net5.0\TuongLeHoiDomain.dll
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\bin\Debug\net5.0\TuongLeHoiDomain.pdb
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\TuongLeHoiBAL.csproj.CopyComplete
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\TuongLeHoiBAL.dll
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\ref\TuongLeHoiBAL.dll
+C:\Users\ADMIN\Desktop\TuongLeHoi\TuongLeHoiBAL\obj\Debug\net5.0\TuongLeHoiBAL.pdb

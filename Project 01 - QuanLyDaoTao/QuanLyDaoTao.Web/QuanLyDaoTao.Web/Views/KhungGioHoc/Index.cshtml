@@ -1,0 +1,72 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="table--database">
+    <div class="container">
+        <div class="section--title">
+            <h3>DANH SÁCH KHUNG GIỜ HỌC</h3>
+        </div>
+        <div class="box-bordertop">
+            <table class="table table-hover table-bordered" id="">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã lớp</th>
+                        <th>Tên môn học</th>
+                        <th>Họ tên</th>
+                        <th>Mã khung giờ</th>
+                        <th>Giờ bắt đầu</th>
+                        <th>Giờ kết thúc</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+    $(document).ready(function () {
+        LoadClassList();
+    })
+
+    function LoadClassList() {
+        $.ajax({
+            url: '/KhungGioHoc/DanhSach',
+            type: 'GET',
+            data: {
+                id: null,
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    let stt = 0;
+                    $.each(data.khunggiohoc, function (key, value) {
+                        stt = stt + 1;
+                        let tr = '<tr id="' + value.id + '">';
+                        tr += '<td>' + stt + '</td>';
+                        tr += '<td>' + value.maLop + '</td>';
+                        tr += '<td>' + value.tenMonHoc + '</td>';
+                        tr += '<td>' + value.hoTen + '</td>';
+                        tr += '<td>' + value.maKhungGio + '</td>';
+                        tr += '<td>' + value.gioBatDau + '</td>';
+                        tr += '<td>' + value.gioKetThuc + '</td>';
+                        tr += '<td>'
+                        tr += '<button class="btn btn-sm btn-info" id="btnEdit" name="edit"><i class="fa fa-info-circle"></i></button>';
+                        tr += '<button class="btn btn-sm btn-danger" id="btnDelete" name="delete"><i class="fa fa-trash"></i></button>';
+                        tr += '</td>'
+                        tr += '</tr>'
+                        $('#table-body').append(tr);
+                    });
+                }
+            }
+        });
+    }
+    </script>
+}

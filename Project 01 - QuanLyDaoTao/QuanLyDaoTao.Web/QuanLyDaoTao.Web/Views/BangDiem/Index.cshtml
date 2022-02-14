@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="table--database">
+    <div class="container">
+        <div class="section--title">
+            <h3>DANH SÁCH BẢNG ĐIỂM</h3>
+        </div>
+        <div class="box-bordertop">
+            <table class="table table-hover table-bordered" id="">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã CT</th>
+                        <th>Mã lớp</th>
+                        <th>Họ tên</th>
+                        <th>Mã môn học</th>
+                        <th>Tên môn học</th>
+                        <th>Điểm thi</th>
+                        <th>Lần thi</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+    $(document).ready(function () {
+        LoadClassList();
+    })
+
+    function LoadClassList() {
+        $.ajax({
+            url: '/BangDiem/DanhSach',
+            type: 'GET',
+            data: {
+                ctDaoTaoID: null,
+                lopHocID: null,
+                hocVienID: null,
+                monHocID: null
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    let stt = 0;
+                    $.each(data.bangdiem, function (key, value) {
+                        stt = stt + 1;
+                        let tr = '<tr id="' + value.id + '">';
+                        tr += '<td>' + stt + '</td>';
+                        tr += '<td>' + value.maCT + '</td>';
+                        tr += '<td>' + value.maLop + '</td>';
+                        tr += '<td>' + value.hoTen + '</td>';
+                        tr += '<td>' + value.maMonHoc + '</td>';
+                        tr += '<td>' + value.tenMonHoc + '</td>';
+                        tr += '<td>' + value.diemThi + '</td>';
+                        tr += '<td>' + value.lanThi + '</td>';
+                        tr += '<td>'
+                        tr += '<button class="btn btn-sm btn-info" id="btnEdit" name="edit"><i class="fa fa-info-circle"></i></button>';
+                        tr += '<button class="btn btn-sm btn-danger" id="btnDelete" name="delete"><i class="fa fa-trash"></i></button>';
+                        tr += '</td>'
+                        tr += '</tr>'
+                        $('#table-body').append(tr);
+                    });
+                }
+            }
+        });
+    }
+    </script>
+}

@@ -1,0 +1,74 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="table--database">
+    <div class="container">
+        <div class="section--title">
+            <h3>DANH SÁCH THI CỬ</h3>
+        </div>
+        <div class="box-bordertop">
+            <table class="table table-hover table-bordered" id="">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã lớp</th>
+                        <th>Tên môn học</th>
+                        <th>Hình thức thi</th>
+                        <th>Ngày thi</th>
+                        <th>Mã đề thi</th>
+                        <th>SL tham dự</th>
+                        <th>SL vắng</th>
+                        <th>Mã nhân viên</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+    $(document).ready(function () {
+        LoadClassList();
+    })
+
+    function LoadClassList() {
+        $.ajax({
+            url: '/ThiCu/DanhSach',
+            type: 'GET',
+            data: {
+                id: null,
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    let stt = 0;
+                    $.each(data.thicu, function (key, value) {
+                        stt = stt + 1;
+                        let tr = '<tr id="' + value.id + '">';
+                        tr += '<td>' + stt + '</td>';
+                        tr += '<td>' + value.maLop + '</td>';
+                        tr += '<td>' + value.tenMonHoc + '</td>';
+                        tr += '<td>' + value.hinhThucthi + '</td>';
+                        tr += '<td>' + value.ngayThi + '</td>';
+                        tr += '<td>' + value.maDeThi + '</td>';
+                        tr += '<td>' + value.slThamDu + '</td>';
+                        tr += '<td>' + value.slVang + '</td>';
+                        tr += '<td>' + value.maNV + '</td>';
+                        tr += '<td>'
+                        tr += '<button class="btn btn-sm btn-info" id="btnEdit" name="edit"><i class="fa fa-info-circle"></i></button>';
+                        tr += '<button class="btn btn-sm btn-danger" id="btnDelete" name="delete"><i class="fa fa-trash"></i></button>';
+                        tr += '</td>'
+                        tr += '</tr>'
+                        $('#table-body').append(tr);
+                    });
+                }
+            }
+        });
+    }
+    </script>
+}

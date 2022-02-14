@@ -1,0 +1,324 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="section--title">
+    <h3>DANH SÁCH LƯỢC ĐỒ TƯ LIỆU</h3>
+</div>
+<div class="box-bordertop">
+    <div class="row justify-content-end">
+        <a class="p-2 bg-success text-white" id="btnCreate">
+            <i class="fa fa-plus"></i>
+            <span>Thêm mới</span>
+        </a>
+    </div>
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th class="text-center">Loại tư liệu</th>
+                <th class="text-center">Thuộc tính</th>
+                <th class="text-center">Bắt buộc</th>
+                <th class="text-center">Lặp lại</th>
+                <th class="text-center">Thứ tự</th>
+                <th class="text-center">Chức năng</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content container">
+            <form enctype="multipart/form-data" id="form" method="post">
+                <h2 class="text-center m-2">LƯỢC ĐỒ TƯ LIỆU</h2>
+                <input id="hiddenvalue" hidden type="text" value="" />
+                <div class="errorTxt" id="errorTxt"></div>
+                <div class="form-group">
+                    <label class="control-label">Loại tư liệu</label>
+                    <select class="form-control" id="maLoaiTuLieu" name="maLoaiTuLieu">
+                        <option class="form-control"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Nhóm thuộc tính</label>
+                    <select class="form-control" id="maNhom" name="maNhom">
+                        <option class="form-control"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Thuộc tính</label>
+                    <select class="form-control" id="maThuocTinh" name="maThuocTinh">
+                        <option class="form-control"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Bắt buộc</label>
+                    <input class="form-control" id="batBuoc" name="batBuoc" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Lặp lại</label>
+                    <input class="form-control" id="lapLai" name="lapLai" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Thứ tự</label>
+                    <input class="form-control" id="thuTu" name="thuTu" type="number" />
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" id="btnSubmit">Lưu lại</button>
+                    <button type="button" class="btn btn-danger" id="btnClose" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="notification">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thông báo</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="notiMessenger"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnConfirm">Xác nhận</button>
+                <button type="button" class="btn btn-danger" id="btnClose" data-dismiss="modal">Đóng lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            LoadDataList();
+            ThuocTinhData();
+            LoaiTuLieuData();
+            NhomThuocTinhData();
+        });
+        function LoadDataList() {
+            $.ajax({
+                url: '/Admin/LuocDoDuLieu/DanhSach',
+                type: 'GET',
+                success: function (data) {
+                    if (data.code == 200) {
+                        let stt = 0;
+                        $.each(data.danhsach, function (key, value) {
+                            stt = stt + 1;
+                            let tr = '<tr id="' + value.id + '">';
+                            tr += '<td class="text-center">' + stt + '</td>';
+                            tr += '<td>' + value.tenLoaiTuLieu + '</td>';
+                            tr += '<td>' + value.tenThuocTinh + '</td>';
+
+                            if (value.batBuoc === true) { tr += '<td class="text-center text-success">' + '<i class="fa fa-check"></i>' + '</td>'; }
+                            else { tr += '<td class="text-center text-danger">' + '<i class="fa fa-times"></i>' + '</td>'; };
+
+                            if (value.lapLai === true) { tr += '<td class="text-center text-success">' + '<i class="fa fa-check"></i>' + '</td>'; }
+                            else { tr += '<td class="text-center text-danger">' + '<i class="fa fa-times"></i>' + '</td>'; };
+
+                            //tr += '<td>' + value.batBuoc + '</td>';
+                            //tr += '<td>' + value.lapLai + '</td>';
+                            tr += '<td class="text-center">' + value.thuTu + '</td>';
+                            tr += '<td class="text-center">'
+                            tr += '<a id="btnEdit"><i class="fa fa-edit text-primary mr-2"></i></a>';
+                            tr += '<a id="btnDelete"><i class="fa fa-trash text-danger"></i></a>';
+                            tr += '</td>'
+                            tr += '</tr>'
+                            $('#table-body').append(tr);
+                        });
+                    }
+                }
+            });
+        };
+        function ThongBao(messenger) {
+            $("#notiMessenger").empty();
+            $("#notiMessenger").append(messenger);
+            $("#btnConfirm").hide();
+            $("#notification").modal();
+        };
+        function ResetForm() {
+            $("#maLoaiTuLieu").val('');
+            $("#maNhom").val('');
+            $("#maThuocTinh").val('');
+            $("#batBuoc").val('');
+            $("#lapLai").val('');
+            $("#thuTu").val('');
+        };
+        function ResetOption() {
+            $('#maThuocTinh').empty();
+
+        }
+        function ThuocTinhData() {
+            $("#maNhom").change(function () {
+                let maNhom = $('#maNhom').val();
+                ResetOption();
+                $.ajax({
+                    url: '/Admin/ThuocTinh/DanhSach',
+                    type: 'GET',
+                    data: { maNhom: maNhom },
+                    success: function (data) {
+                        if (data.code === 200) {
+                            $.each(data.danhsach, function (key, value) {
+                                let option = '<option  value="' + value.id + '" class="form-control">' + value.tenThuocTinh + '</option>';
+                                $('#maThuocTinh').append(option);
+                            });
+                        }
+                    }
+                })
+            });
+           
+        };
+        function LoaiTuLieuData() {
+            $.ajax({
+                url: '/Admin/LoaiTuLieu/DanhSach',
+                type: 'GET',
+                success: function (data) {
+                    if (data.code === 200) {
+                        $.each(data.danhsach, function (key, value) {
+                            let option = '<option  value="' + value.id + '" class="form-control">' + value.tenLoaiTuLieu + '</option>';
+                            $('#maLoaiTuLieu').append(option);
+                        });
+                    }
+                }
+            })
+        };
+        function NhomThuocTinhData() {
+            $.ajax({
+                url: '/Admin/NhomThuocTinh/DanhSach',
+                type: 'GET',
+                success: function (data) {
+                    if (data.code === 200) {
+                        $.each(data.danhsach, function (key, value) {
+                            let option = '<option  value="' + value.id + '" class="form-control">' + value.tenNhom + '</option>';
+                            $('#maNhom').append(option);
+                        });
+                    }
+                }
+            })
+        };
+
+        $('#btnSubmit').click(function () {
+            let hiddenvalue = $('#hiddenvalue').val();
+
+            let maLoaiTuLieu = $('#maLoaiTuLieu').val().trim();
+            let maThuocTinh = $('#maThuocTinh').val().trim();
+            let batBuoc = $('#batBuoc').val().trim();
+            let lapLai = $('#lapLai').val().trim();
+            let thuTu = $('#thuTu').val().trim();
+
+            let formData1 = new FormData();
+            formData1.append('maLoaiTuLieu', maLoaiTuLieu);
+            formData1.append('maThuocTinh', maThuocTinh);
+            formData1.append('batBuoc', batBuoc);
+            formData1.append('lapLai', lapLai);
+            formData1.append('thuTu', thuTu);
+
+            let formData2 = new FormData();
+            formData2 = formData1;
+            formData2.append('id', hiddenvalue);
+
+            if ($("#form").valid()) {
+                if (hiddenvalue.length == 0) {
+                    //Thêm mới
+                    $.ajax({
+                        url: '/Admin/LuocDoDuLieu/TaoMoi',
+                        type: 'post',
+                        data: formData1,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.code == 200) {
+                                ResetForm();
+                                $('#table-body').empty();
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                                LoadDataList();
+                            } else {
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                            }
+                        }
+                    });
+                }
+                else if (hiddenvalue.length != 0) {
+                    //Chỉnh sửa
+                    $.ajax({
+                        url: '/Admin/LuocDoDuLieu/ChinhSua',
+                        type: 'PUT',
+                        data: formData2,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.code == 200) {
+                                $('#table-body').empty();
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                                LoadDataList();
+                            } else {
+                                $('#btnClose').click();
+                                ThongBao(data.msg);
+                            }
+                        }
+                    })
+                }
+            }
+
+
+        });
+        $(document).on('click', "a[id='btnCreate']", function () {
+            $('#hiddenvalue').val(''); // Hidden id
+            $("#modal").modal();
+            ResetForm();
+        });
+        $(document).on('click', "a[id='btnEdit']", function () {
+            let id = $(this).closest('tr').attr('id');
+            $('#hiddenvalue').val(id);
+            ResetForm();
+
+            $.ajax({
+                url: '/Admin/LuocDoDuLieu/LayID',
+                type: 'GET',
+                data: { id: id },
+                success: function (data) {
+                    $('#maLoaiTuLieu').val(data.data.maLoaiTuLieu);
+                    $('#maNhom').val(data.data.maNhom);
+                    $('#maThuocTinh').val(data.data.maThuocTinh);
+                    $('#batBuoc').val(data.data.batBuoc);
+                    $('#lapLai').val(data.data.lapLai);
+                    $('#thuTu').val(data.data.thuTu);
+                    $("#modal").modal();
+                }
+            });
+        });
+        $(document).on('click', "a[id='btnDelete']", function () {
+            let id = $(this).closest('tr').attr('id');
+            var noti = confirm("Bạn có muốn xóa không?");
+            if (noti == true) {
+                $.ajax({
+                    url: '/Admin/LuocDoDuLieu/XoaBo',
+                    type: 'delete',
+                    data: { id: id },
+                    success: function (data) {
+                        if (data.code === 200) {
+                            $('#table-body').empty();
+                            LoadDataList();
+                            ThongBao(data.msg);
+                        }
+                        else ThongBao(data.msg);
+                    }
+                })
+            } else {
+                alert("You pressed Cancel!");
+            }
+        });
+    </script>
+}
+
+
+
+
